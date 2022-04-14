@@ -1,0 +1,1 @@
+ To start the backend: node app.js
