@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+  
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <title>LCKG</title>
+  </head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <body class="antialiased text-slate-500 bg-white">
+<!--    <h1>LC·KG</h1>-->
+<!--    <div id="functionZone">-->
+        <div id="root" class="w-full"></div>
+<!--        <div id = "searchpart">-->
+<!--            <h3>Search & Explore !!</h3>-->
+<!--            <form role="search" id="form">-->
+<!--                <input type="search" id="query" name="q" placeholder="Search..." aria-label="Search through site content">-->
+<!--                <button id = 'searchButton'>-->
+<!--                  <svg viewBox="0 0 1024 1024"><path class="path1" d="M848.471 928l-263.059-263.059c-48.941 36.706-110.118 55.059-177.412 55.059-171.294 0-312-140.706-312-312s140.706-312 312-312c171.294 0 312 140.706 312 312 0 67.294-24.471 128.471-55.059 177.412l263.059 263.059-79.529 79.529zM189.623 408.078c0 121.364 97.091 218.455 218.455 218.455s218.455-97.091 218.455-218.455c0-121.364-103.159-218.455-218.455-218.455-121.364 0-218.455 97.091-218.455 218.455z"></path></svg>-->
+<!--                </button>-->
+<!--            </form>-->
+<!--            <select id="searchModeselect">-->
+<!--                <option value="circle">circlal</option>-->
+<!--                <option value="cluster">cluster</option>-->
+<!--                <option value="hierarchical">hierarchicy</option>-->
+<!--                <option value="physics">physics</option>-->
+<!--            </select>-->
+<!--              <div id ='buttonGroup'>-->
+<!--                  <button class = 'fancyButton' id="CirKGbutton">Full Circle-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                    </button>-->
+<!--                    <button class = 'fancyButton' id="ClusKGbutton">Full Cluste-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                      </button>-->
+<!--                      <button class = 'fancyButton' id="PhysKGbutton">Full Physic-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                        <span></span>-->
+<!--                      </button>-->
+<!--                    <button class = 'fancyButton' id="Resetbutton">Reset KG-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                      <span></span>-->
+<!--                    </button>-->
+<!--              </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+
+    <script>
+        // 这一部分对应Search Box 放大镜的search function
+        const f = document.getElementById('form');
+        const q = document.getElementById('query');
+        const google = 'https://www.google.com/search?q=site%3A+';
+        const site = 'pagedart.com'; // 这里还保留着在google上搜索的功能，后续可以加上？
+    
+        function searchInBox(event) {
+            // 这个是search button对应的search function
+            // console.log(q.value)
+            var elementToSearch = q.value
+            event.preventDefault();
+            var searchBoxConfig
+            var searchMode = $("#searchModeselect").val()//value  
+            switch(searchMode){
+                case 'circle':
+                    searchBoxConfig = GetSearchConfig(elementToSearch,visConfigDefault)
+                    break;
+                case 'cluster':
+                    searchBoxConfig = GetSearchConfig(elementToSearch,visConfigCLuster)
+                    break;
+                case 'hierarchical':
+                    searchBoxConfig = GetSearchConfig(elementToSearch,visConfigHier)
+                    break;
+                case 'physics':
+                    searchBoxConfig = GetSearchConfig(elementToSearch,visConfigPhysics) 
+                    break;       
+                default:
+                    searchBoxConfig = GetSearchConfig(elementToSearch,visConfigDefault)
+                    console.log('defaulf')
+                    break;
+            }
+            // var searchBoxConfig = GetSearchConfig(elementToSearch,visConfigDefault)   
+            var vizSearch = new NeoVis.default(searchBoxConfig);
+            vizSearch.render();
+
+            // 这里获取了node结点的信息，例如名字, 这一部分还要再修改
+            vizSearch.registerOnEvent("completed", (e)=>{ 
+                vizSearch["network"].on("click", (event)=>{
+                    // console.log($('.vis-tooltip').children().text()) //!!!vis-tooltip stores node information!
+                    event.text = $('.vis-tooltip').children().text()
+
+                    console.log(event);
+
+                    // event.nodes[0] or event.edges[0] have id of node or edge  clicked
+                // you can get data of node data as viz["_nodes"][event.nodes[0]], similarly do for edges
+                    });
+                vizSearch["network"].on("hover",(event)=>{
+                    event.coloer = 'red'
+                    // console.log('red')
+                    })
+                // viz["_node"].on("click",(event)=>{
+                //     console.log(event.label)
+                // })
+            });
+
+            console.log("searchInBox")
+        }
+            if(f){
+                f.addEventListener('submit', searchInBox);
+            }
+      </script>
+      <script>
+          // This part refer to the Rest Button, clear the viz canvas, reset the size to the origin
+          $('#Resetbutton').click(clearViz)
+          function clearViz(){
+            var viz = document.getElementById("viz")
+            var table1 = document.getElementById('table1')
+            viz.innerHTML=""
+            table1.style.display = '';
+            table1.style.width = '680px';
+            table1.style.height = '500px';
+            viz.style.width = "700px";
+            viz.style.marginLeft = "0px";
+            viz.style.borderLeftColor = "rgba(168, 166, 166, 0.178)";
+          }
+      </script>
+    <div id="displayZone">
+        <div id="table1">
+            <pre id="fileDisplayArea"></pre>
+        </div>
+        <div id="viz" >
+        </div>
+        <div id="table2">
+            <pre id="fileDisplayArea2"></pre>
+            <!-- <div id="table_wrapper"></div> -->
+            <script>
+                function searchInTable(elementToSearch) {
+
+                    // 这一部分才是在table里做search
+                    console.log("Search for: ",elementToSearch)
+                    var searchInTableConfig
+                    var searchMode =  $("#searchModeselect").val()//value
+                    switch(searchMode){
+                        case 'circle':
+                            searchInTableConfig = GetSearchConfig(elementToSearch,visConfigDefault)
+                            break;
+                        case 'cluster':
+                            searchInTableConfig = GetSearchConfig(elementToSearch,visConfigCLuster)
+                            break;
+                        case 'hierarchical':
+                            searchInTableConfig = GetSearchConfig(elementToSearch,visConfigHier)
+                            break;
+                        case 'physics':
+                            searchInTableConfig = GetSearchConfig(elementToSearch,visConfigPhysics)
+                            break;
+                        default:
+                            searchInTableConfig = GetSearchConfig(elementToSearch,visConfigDefault)
+                            console.log('defaulf')
+                            break;
+                    }
+                    var vizSearchInT = new NeoVis.default(searchInTableConfig);
+                    vizSearchInT.render();
+                    // 这里获取了node结点的信息，例如名字, 这一部分还要再修改
+                    vizSearchInT.registerOnEvent("completed", (e)=>{
+                        vizSearchInT["network"].on("select", (event)=>{
+                            // console.log($('.vis-tooltip').children().text()) //!!!vis-tooltip stores node information!
+                            event.text = $('.vis-tooltip').children().text()
+                            // console.log(label);
+                            // console.log(viz);
+                            // console.log(event.text);
+                            var supplement = document.getElementById('supplementCell')
+                            // var nodeText=document.createTextNode(event.text)
+                            // var para=document.createElement('p') // 添加一个button来添加p
+                            // supplement.appendChild(para)
+                            // 正则表达式匹配name：之后到pagerank：之前的内容
+                            var regulaHandlerOne = /(?<=name:).*/ //先得到name：之后的内容，因为edge没有pagerank
+                            var regulaHandlerTwo = /(?=pagerank).*/ //再匹配pagerank之后的内容，把这部分替换掉
+                            var nodeContentOne = event.text.match(regulaHandlerOne)[0]
+                            var nodeContentTwo = nodeContentOne.replace(regulaHandlerTwo,' ')
+                            var textNode=document.createTextNode(nodeContentTwo)
+                            console.log(nodeContentTwo)
+                            supplement.appendChild(textNode)
+                            var selected = vizSearchInT["network"].getSelection();
+                            // var TempEdges = vizSearchInT["network"].getSelectedEdges();
+                            console.log(selected)
+
+                            // event.nodes[0] or event.edges[0] have id of node or edge  clicked
+                        // you can get data of node data as viz["_nodes"][event.nodes[0]], similarly do for edges
+                            });
+                            // vizSearchInT["network"].getSelection();
+                        vizSearchInT["network"].on("hover",(event)=>{
+                            event.coloer = 'red'
+                            // console.log('red')
+                            })
+                        // viz["_node"].on("click",(event)=>{
+                        //     console.log(event.label)
+                        // })
+                    });
+                    console.log("vizSearchInT")
+
+                }
+
+                // This part create the Keywords table. We hide it initially
+
+                let table = document.createElement('table');
+                table.id = 'keywordsTable'
+                let thead = document.createElement('thead');
+                let tbody = document.createElement('tbody');
+                table.appendChild(thead);
+                table.appendChild(tbody);
+                // Adding the entire table to the body tag
+                document.getElementById('fileDisplayArea2').appendChild(table);
+                table.style.display = 'none' // initially hide the table, we will display it after user press "Show List"
+                // create the head of table
+                let row_1 = document.createElement('tr');
+                // 下面为7类keywords添加heading
+                let heading_1 = document.createElement('th'); //th是横向并列排列的
+                heading_1.innerHTML = "Confidential Terms";
+                let heading_2 = document.createElement('th'); //th是横向并列排列的
+                heading_2.innerHTML = "Payment Terms";
+                let heading_3 = document.createElement('th'); //th是横向并列排列的
+                heading_3.innerHTML = "Disclaimers";
+                let heading_4 = document.createElement('th'); //th是横向并列排列的
+                heading_4.innerHTML = "Warranties";
+                let heading_5 = document.createElement('th'); //th是横向并列排列的
+                heading_5.innerHTML = "Dispute Resolution Terms";
+                let heading_6 = document.createElement('th'); //th是横向并列排列的
+                heading_6.innerHTML = "Force Majeure";
+                let heading_7 = document.createElement('th'); //th是横向并列排列的
+                heading_7.innerHTML = "Others";
+                let heading_8 = document.createElement('th'); //th是横向并列排列的
+                heading_8.innerHTML = "Supplements";
+
+
+                row_1.appendChild(heading_1);
+                row_1.appendChild(heading_2);
+                row_1.appendChild(heading_3);
+                row_1.appendChild(heading_4);
+                row_1.appendChild(heading_5);
+                row_1.appendChild(heading_6);
+                row_1.appendChild(heading_7);
+                row_1.appendChild(heading_8);
+
+                thead.appendChild(row_1);
+                // create the data elements in the table
+                // 每类5个keywords，一共35个
+                let NumOfCategory = 8; //
+                let NumOfRow = 5;
+                var originalContract = false // variable to get the original content without highlight
+
+                for (let i = 0; i< NumOfRow; i++){
+                    let newRow = document.createElement('tr');
+                    newRow.id=`row_${i}`
+
+                    for (let j = 0; j < NumOfCategory-1;++j){ // bond search function to each td, one more for 补充信息, supplement里面不用分格子
+                        let newRowData = document.createElement('td'); // td是一行内并列的data cell
+
+                        newRowData.id=`column_${j}_data_${i}`
+                        newRowData.addEventListener('click', tdclick);
+                        newRow.appendChild(newRowData);
+
+                    }
+                    tbody.appendChild(newRow);
+
+                }
+                // 单独处理supplement 格子
+                var supplementCell = document.createElement('td');
+                supplementCell.id = 'supplementCell'
+                var rowOne = document.getElementById('row_0')
+                rowOne.appendChild(supplementCell)
+
+
+                function highlightText(tableContent) {
+                    // function to highlight keywords base on tdclick
+                    var searched=tableContent
+                    if (searched !== "") {
+                        let text = document.getElementById("fileDisplayArea").innerHTML;
+                        let re = new RegExp(searched,'gi'); // search for all instances, regardless of upper of low cases
+                            let newText = text.replace(re, `<mark>${searched}</mark>`);
+                            document.getElementById("fileDisplayArea").innerHTML = newText;
+                    }
+                };
+
+                function resetHighlight(originalContract){
+                    // function to reset the highlight
+                    document.getElementById("fileDisplayArea").innerHTML = originalContract;
+                };
+
+                function tdclick(e){  // function to stop event propogation and run search & highlight
+                    e.preventDefault()
+                    if (!originalContract){
+                        // get the original contract without highlight, use to reset the contract
+                        originalContract = fileDisplayArea = document.getElementById('fileDisplayArea').innerHTML
+                    }
+                    if (!e) var e = window.event;                // Get the window event
+                    e.cancelBubble = true;                       // IE Stop propagation
+                    if (e.stopPropagation) e.stopPropagation();  // Other Broswers
+                    console.log('td clicked');
+                    let tableContent = this.innerHTML
+                    resetHighlight(originalContract)
+                    highlightText(tableContent)
+                    clearViz
+                    searchInTable(tableContent)
+
+                };
+            </script>
+            <button class = 'fancyButton' id="changeLineButton" >New Line</button>>
+            <script>
+                var changeLineButton = document.getElementById('changeLineButton')
+                changeLineButton.onclick = function(){
+
+                    var para=document.createElement('p') // 添加一个button来添加p
+                    var supplement  = document.getElementById('supplementCell')
+                    supplement.appendChild(para)
+                    console.log('success')
+
+                }
+
+            </script>
+            <a id="dlink" style="display:none;"></a>
+            <input id="downLoadButton" type="button" value="DownLoad Report">
+            <script>
+            // this is the part for the final report download
+            var tableToExcel = (function() {
+                var uri = 'data:application/vnd.ms-excel;base64,',
+                    template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+                    base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) },
+                    format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) };
+                return function(table, name, filename) {
+                    if (!table.nodeType) table = document.getElementById(table);
+                    console.log(table.innerHTML)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }//此时的innerHTML数据可以自己自定义 比如json转化 只要值要数据符合即可
+                    document.getElementById("dlink").href = uri + base64(format(template, ctx));
+                    document.getElementById("dlink").download = filename;
+                    document.getElementById("dlink").click();
+                }
+            });
+            var id = "keywordsTable",
+                worksheetName = 'sheet',
+                workName = "report.xls";
+            document.getElementById('downLoadButton').onclick = function() {
+                var download = tableToExcel();
+                download(id, worksheetName, workName)
+            };
+            </script>
+        </div>
+    </div>
+  </body>
+</html>

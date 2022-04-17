@@ -8,6 +8,9 @@ import $ from 'jquery';
 // import SweetAlert2 from 'sweetalert2';
 import swal from 'sweetalert';
 
+import Visual from "./components/Visual";
+import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
+import Home from "./components/Home";
 function App() {
 
   //trail
@@ -211,42 +214,79 @@ function App() {
 
   
   return (
-    <div className="App">
-      <h2>Upload Your Contract</h2>
-      {/* {image.preview && <img src={image.preview} width='100' height='100' />} */}
-      <div className="UploadZone">
-        <form className="uploadForm" onSubmit={handleSubmit}>
-            <label className="custom-file-upload">
-              <input type='file' id = 'fileInput' name='file' onChange={handleFileChange}></input>
-              Upload
-            </label>
-            {/* <input type='file' name='file' onChange={handleFileChange}></input> */}
-            <button id='btn6' className = 'fancyButton' type='submit'>Submit</button>
-          </form>
-          <div id ='buttonGroup'>
-            <button id="btn1" className = 'fancyButton' onClick = {getResult}>Analysis
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-            <button id="btn2" className = 'fancyButton' onClick = {showKeywords}>Show List
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
-          </div>
-      </div>
-          {/* <hr></hr> */}
 
-      {/* <div className="Page" ></div> */}
-      {/* <form onSubmit={handleSubmit}>
-        <input type='file' name='file' onChange={handleFileChange}></input>
-        <button type='submit'>Submit</button>
-      </form> */}
-      {status && <h4>{status}</h4>}
-    </div>
+      <Router>
+          <div class="sticky top-0 z-40 w-auto backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60">
+              <div class="max-w-8xl mx-auto">
+                  <div class="py-2 border-b border-slate-400/10 lg:border-0 mx-4 lg:mx-0">
+                      <div class="relative flex items-center">
+                          <img className="h-10 w-10" src="/pic.png"/>
+                          <a class="mr-3 flex-none w-[2.0625rem] overflow-hidden md:w-auto" href="/">
+
+                              <span class="text-slate-900 w-auto h-5">LCKG</span>
+                          </a>
+                          <div class="relative hidden lg:flex items-center ml-auto">
+                              <nav class="text-sm leading-6 font-semibold text-slate-700">
+                                  <ul class="flex space-x-8">
+                                      <li>
+                                          <Link to='/visual' class='hover:text-sky-500'>Contract Review</Link>
+                                      </li>
+                                      <li>
+                                          <Link to='/visual' class='hover:text-sky-500'>Visualization</Link>
+                                      </li>
+                                      <li>
+                                          <Link to='/visual' class='hover:text-sky-500'>Team</Link>
+                                      </li>
+                                  </ul>
+                              </nav>
+                          </div>
+                      </div>
+                  </div>
+
+              </div>
+          </div>
+        <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/visual' element={<Visual />}/>
+        </Routes>
+      </Router>
+    //
+    // <div className="App">
+    //   <h2>Upload Your Contract</h2>
+    //   {/* {image.preview && <img src={image.preview} width='100' height='100' />} */}
+    //   <div className="UploadZone">
+    //     <form className="uploadForm" onSubmit={handleSubmit}>
+    //         <label className="custom-file-upload">
+    //           <input type='file' id = 'fileInput' name='file' onChange={handleFileChange}></input>
+    //           Upload
+    //         </label>
+    //         {/* <input type='file' name='file' onChange={handleFileChange}></input> */}
+    //         <button id='btn6' className = 'fancyButton' type='submit'>Submit</button>
+    //       </form>
+    //       <div id ='buttonGroup'>
+    //         <button id="btn1" className = 'fancyButton' onClick = {getResult}>Analysis
+    //           <span></span>
+    //           <span></span>
+    //           <span></span>
+    //           <span></span>
+    //         </button>
+    //         <button id="btn2" className = 'fancyButton' onClick = {showKeywords}>Show List
+    //           <span></span>
+    //           <span></span>
+    //           <span></span>
+    //           <span></span>
+    //         </button>
+    //       </div>
+    //   </div>
+    //       {/* <hr></hr> */}
+    //
+    //   {/* <div className="Page" ></div> */}
+    //   {/* <form onSubmit={handleSubmit}>
+    //     <input type='file' name='file' onChange={handleFileChange}></input>
+    //     <button type='submit'>Submit</button>
+    //   </form> */}
+    //   {status && <h4>{status}</h4>}
+    // </div>
   );
 }
 

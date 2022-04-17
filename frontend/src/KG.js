@@ -1,4 +1,4 @@
-import NeoVis from './neovis.js';
+import NeoVis from './neovis_2/neovis.js';
 import React from "react";
 function draw(){
     var oldConfig ={
