@@ -15,7 +15,7 @@ const Collapse = props => {
     const expandSection = element => {
         const sectionHeight = element.scrollHeight;
         // element.style.height = sectionHeight + 'px';
-        element.style.height = 200 + 'px'
+        element.style.height = 160 + 'px'
         element.style.display= 'Block';
 
         let clearTime = setTimeout(() => {

@@ -4,13 +4,13 @@ import React, { useEffect, useState } from "react";
 // import Page from './components/Page';
 import CallApi from './components/CallApi';
 import $ from 'jquery'; 
-// import swal from 'sweetalert2/src/sweetalert2.js';
-// import SweetAlert2 from 'sweetalert2';
+
 import swal from 'sweetalert';
+import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 
 import Visual from "./components/Visual";
-import {BrowserRouter as Router, Route, Routes, Link} from 'react-router-dom';
 import Home from "./components/Home";
+import Review from "./components/Review"
 function App() {
 
   //trail
@@ -44,6 +44,7 @@ function App() {
   }
 // function to do search with the relation triples
   function showKeywords(){
+
       console.log(content) // content 是一个大string，每个部分用[]区分，因此要按照]做split
       function getList(contentEle){
       //   将python中的list转化为7个js array,
@@ -216,20 +217,20 @@ function App() {
   return (
 
       <Router>
-          <div class="sticky top-0 z-40 w-auto backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 dark:border-slate-50/[0.06] bg-white/95 supports-backdrop-blur:bg-white/60">
+          <div class="sticky top-0 z-40 w-auto backdrop-blur flex-none transition-colors duration-500 lg:z-50 lg:border-b lg:border-slate-900/10 bg-white/95 supports-backdrop-blur:bg-white/60">
               <div class="max-w-8xl mx-auto">
-                  <div class="py-2 border-b border-slate-400/10 lg:border-0 mx-4 lg:mx-0">
+                  <div class=" border-2 border-slate-400/10 lg:border-0 mx-4 lg:mx-0">
                       <div class="relative flex items-center">
                           <img className="h-10 w-10" src="/pic.png"/>
                           <a class="mr-3 flex-none w-[2.0625rem] overflow-hidden md:w-auto" href="/">
 
-                              <span class="text-slate-900 w-auto h-5">LCKG</span>
+                              <span class=" pl-4 text-slate-900 w-auto h-5">CReKG</span>
                           </a>
                           <div class="relative hidden lg:flex items-center ml-auto">
                               <nav class="text-sm leading-6 font-semibold text-slate-700">
-                                  <ul class="flex space-x-8">
+                                  <ul class="flex space-x-8 mr-8">
                                       <li>
-                                          <Link to='/visual' class='hover:text-sky-500'>Contract Review</Link>
+                                          <Link to='/review' class='hover:text-sky-500'>Contract Review</Link>
                                       </li>
                                       <li>
                                           <Link to='/visual' class='hover:text-sky-500'>Visualization</Link>
@@ -247,7 +248,8 @@ function App() {
           </div>
         <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/visual' element={<Visual />}/>
+            <Route path='/visual' element={<Visual />} />
+            <Route path='/review' element={<Review />} />
         </Routes>
       </Router>
     //

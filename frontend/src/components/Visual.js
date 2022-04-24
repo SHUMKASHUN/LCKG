@@ -60,12 +60,15 @@ function Visual(props) {
                         </span>
                     </div>
                     <Collapse isOpen={isOpen} >
-                        <div> 此处放内容 </div>
-                        <div> 此处放内容 </div>
-
-                        <div> 此处放内容 </div>
-
-                        <div> 此处放内容 </div>
+                        <div class="flex flex-row justify-evenly border-b-[1px] border-[#979797]/[0.1] py-3">
+                            <span>Payment</span><span>Governing law</span><span>Credit</span>
+                        </div>
+                        <div className="flex flex-row justify-evenly border-b-[1px] border-[#979797]/[0.1] py-3">
+                            <span>Obligation</span><span>Warranty</span><span>Disclaimer</span>
+                        </div>
+                        <div className="flex flex-row justify-evenly border-b-[1px] border-[#979797]/[0.1] py-3">
+                            <span>Dispute</span><span>Jurisdiction</span><span>Sale</span>
+                        </div>
 
                     </Collapse>
 
@@ -119,7 +122,6 @@ function Visual(props) {
                 </div>
             </div>
             <div class="block basis-3/4 grow-0 shrink-0 max-w-[75%] px-4 container" id="viz">
-
             </div>
         </div>
     );
